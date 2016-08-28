@@ -1,0 +1,21 @@
+﻿安装过程：
+1.下载：Elasticsearch 2.3.5
+	https://www.elastic.co/downloads/elasticsearch 
+
+
+2.单机环境：
+	windows运行bin/elasticsearch.bat。(使用过程中，需一直运行)
+	如果是在局域网中运行elasticsearch集群也是很简单的，只要cluster.name设置一致，并且机器在同一网段下，启动的es会自动发现对方，组成集群。
+
+
+
+3.eclipse环境配置：
+	添加下载包中lib目录下的包到工程
+
+遇到问题：
+1.Exception in thread "main" java.lang.IllegalStateException: path.home is not configured
+	类文件右键选择Run Configurations,Arguments标签页下，VM arguements下写：
+	-Des.path.home=F:\Program Files (x86)\elasticsearch-2.3.5（注：安装文件目录）
+
+2.乱码
+	set JAVA_OPTIONS=%JAVA_OPTIONS% -Dfile.encoding=uft-8
