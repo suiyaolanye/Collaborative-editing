@@ -1,79 +1,38 @@
 package com.jiurong.mnote.search;
 
-import static org.elasticsearch.node.NodeBuilder.nodeBuilder;
-
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Date;
-import java.util.UUID;
-
-import org.apache.log4j.BasicConfigurator;
-import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.search.SearchRequestBuilder;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.QueryStringQueryBuilder;
-import org.elasticsearch.node.Node;
-
-import static org.elasticsearch.common.xcontent.XContentFactory.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class Test {
 	
-	public static String uuid() {
-		return UUID.randomUUID().toString().replaceAll("-", "");
-	}
 	
-	public static void main(String[] args) {
-//		String documentId = uuid();
-//		String paragraphId = uuid();
-		String documentId = "c";
-		String paragraphId = "12";
-		String text = "久荣科技";
+	public static void main(String[] args) throws ExecutionException, Exception {
+		String documentId = "a";
+		String paragraphId = "1";
 		
-		BasicConfigurator.configure();
-
-		try {	 
-			Settings.Builder settings = Settings.builder().put();  
-			Client client = TransportClient.builder().settings(settings).build()  
-			                .addTransportAddress(new InetSocketTransportAddress(  
-			                        InetAddress.getByName("localhost"), Integer.parseInt("9300")));  
-			
-//			 IndexResponse response = client.prepareIndex(documentId, paragraphId)
-//				    .setSource( XContentFactory.jsonBuilder()  
-//				    .startObject()  
-//				      .field("author", "569874")  
-//				      .field("body", "aa北京不错，但是人太多了")  
-//				      .field("createDate", new Date())  
-//				      .field("isArray",false)
-//				    .endObject())  
-//				    .setTTL(8000)  
-//				    .execute().actionGet();
-//		
-//			System.out.println(response.getId());  
-			
-			SearchRequestBuilder builder = client.prepareSearch(documentId).setTypes().setSearchType(SearchType.DEFAULT).setFrom(0).setSize(100);  
-			BoolQueryBuilder qb = QueryBuilders.boolQuery().must(new   QueryStringQueryBuilder("北京").field("body"))  
-			    .should(new QueryStringQueryBuilder("但是").field("body"));  
-			builder.setQuery(qb);  
-			SearchResponse responseSearch = builder.execute().actionGet();  
-			System.out.println("  " + responseSearch);  
-			System.out.println(responseSearch.getHits().getTotalHits()); 
-			
-			client.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();	
-		}	
+		String texts = "哈尔滨工业大学";
+		String textsModify = "哈尔滨工业大学（威海）";
+		
+		List<String> documentIdSearch = new ArrayList<String>();
+		documentIdSearch.add("a");
+		documentIdSearch.add("b");
+		documentIdSearch.add("c");
+		
+		SearchServiceApi searchIndex = new SearchServiceApi();
+		
+//		searchIndex.addParagraph(IndexType.PARAGRAPH, documentId, paragraphId, texts, "text", null);
+		
+//		searchIndex.editParagraph(IndexType.COMMENT, documentId, paragraphId, textsModify, "arrayField", null);
+		
+		searchIndex.search("哈尔滨威海", documentIdSearch);
+		
+//		searchIndex.deleteParagraph(documentId, paragraphId);
+		
+//		searchIndex.deleteDocument(documentId);
+		
+		searchIndex.closeClient();	
 		
 	}
 }

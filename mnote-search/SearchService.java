@@ -1,7 +1,9 @@
 package com.jiurong.mnote.search;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * 对索引服务调用方式说明：
@@ -28,20 +30,27 @@ public interface SearchService {
 	 * @param indexType 索引类型
 	 * @param documentId 文档id
 	 * @param paragraphId 段落id
-	 * @param texts 段落纯文本内容，可能有多段内容。这部分内容需要分词并添加索引。
+	 * @param texts 段落纯文本内容，这部分内容需要分词并添加索引。
+	 * @param textType 标记文本类型，纯文本为text，数组字段为arrayField。
 	 * @param keywords 检索关键字，这部分内容不应该分词，应该直接进行索引。
+	 * @throws IOException 
 	 */
-	void addParagraph(IndexType indexType, String documentId, String paragraphId, List<String> texts, List<String> keywords);
+	void addParagraph(IndexType indexType, String documentId, String paragraphId, String texts, String textType, List<String> keywords) throws IOException;
 	
 	/**
 	 * 更新段落索引
 	 * @param indexType 索引类型
 	 * @param documentId 文档id
 	 * @param paragraphId 段落id
-	 * @param texts 段落纯文本内容，可能有多段内容。这部分内容需要分词并添加索引。
+	 * @param texts 段落纯文本内容，这部分内容需要分词并添加索引。
+	 * @param textType 标记文本类型，纯文本为text，数组字段为arrayField。
 	 * @param keywords 检索关键字，这部分内容不应该分词，应该直接进行索引。
+	 * @throws IOException 
+	 * @throws ExecutionException 
+	 * @throws InterruptedException 
+	 * @throws Exception 
 	 */
-	void editParagraph(IndexType indexType, String documentId, String paragraphId, List<String> texts, List<String> keywords);
+	void editParagraph(IndexType indexType, String documentId, String paragraphId, String texts, String textType, List<String> keywords) throws IOException, InterruptedException, ExecutionException, Exception;
 	
 	/**
 	 * 删除段落索引
