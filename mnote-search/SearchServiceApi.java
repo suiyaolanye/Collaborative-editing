@@ -1,6 +1,7 @@
 package com.jiurong.mnote.search;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.text.Text;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentFactory;
@@ -36,6 +38,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.highlight.HighlightField;
 import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.search.sort.SortParseElement;
 
@@ -60,7 +63,7 @@ public class SearchServiceApi implements SearchService {
 	
 
 	public void addParagraph(IndexType indexType, String documentId, String paragraphId, String texts, String textType,
-			List<String> keywords) throws IOException {
+			List<String> atWords) throws IOException {
 		if(indexType == null || documentId == null || paragraphId == null || texts == null || textType == null) {
 			return;
 		}
@@ -78,7 +81,7 @@ public class SearchServiceApi implements SearchService {
 	}
 
 	public void editParagraph(IndexType indexType, String documentId, String paragraphId, String texts, String textType, 
-			List<String> keywords) throws IOException, ExecutionException, Exception {
+			List<String> atWords) throws IOException, ExecutionException, Exception {
 		UpdateRequest updateRequest = new UpdateRequest();
 		updateRequest.index(documentId);
 		updateRequest.type(paragraphId);
@@ -100,12 +103,14 @@ public class SearchServiceApi implements SearchService {
 		
 		SearchRequestBuilder builder;
 		if(documentIds == null || documentIds.size()==0) {
-			builder = client.prepareSearch().setTypes().setSearchType(SearchType.DEFAULT).setFrom(0).setSize(100);  
+			builder = client.prepareSearch().setTypes().setSearchType(SearchType.DEFAULT).setFrom(0).setSize(100)
+					.addHighlightedField("texts");  
 		}
 		else {
 			int size=documentIds.size();  
 	        String[] array = (String[])documentIds.toArray(new String[size]); 
-			builder = client.prepareSearch(array).setTypes().setSearchType(SearchType.DEFAULT).setFrom(0).setSize(100);  
+			builder = client.prepareSearch(array).setTypes().setSearchType(SearchType.DEFAULT).setFrom(0).setSize(100)
+					.addHighlightedField("texts");  
 		}
 		
 		BoolQueryBuilder qb = QueryBuilders.boolQuery().must(new QueryStringQueryBuilder(keyword).field("texts"))  
@@ -120,15 +125,24 @@ public class SearchServiceApi implements SearchService {
 		else {
 			Index itemIndex;
 			Map<String, Object> itemMap;
+			List<String> highlight;
+			List<Text>  highText;
 			for(SearchHit h :responseSearch.getHits()) {
 				itemIndex = new Index();
 				itemMap = h.getSource();
+				
+				highlight = new ArrayList<String>();
+				highText = Arrays.asList(h.getHighlightFields().get("texts").fragments());
+				for(Text hh:highText) {
+					highlight.add(hh.toString());
+				}
 				
 				itemIndex.setDocumentId(h.getIndex());
 				itemIndex.setParagraphId(h.getType());
 				itemIndex.setIndexType(IndexType.valueOf((String)itemMap.get("indexType")));
 				itemIndex.setTexts((String)itemMap.get("texts"));
 				itemIndex.setTextType((String)itemMap.get("textType"));
+				itemIndex.setHighlightText(highlight);
 				
 				result.add(itemIndex);
 				System.out.println(itemIndex);

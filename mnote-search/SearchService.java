@@ -32,10 +32,10 @@ public interface SearchService {
 	 * @param paragraphId 段落id
 	 * @param texts 段落纯文本内容，这部分内容需要分词并添加索引。
 	 * @param textType 标记文本类型，纯文本为text，数组字段为arrayField。
-	 * @param keywords 检索关键字，这部分内容不应该分词，应该直接进行索引。
+	 * @param atWords 添加索引时，at后面的人名，便于分词。
 	 * @throws IOException 
 	 */
-	void addParagraph(IndexType indexType, String documentId, String paragraphId, String texts, String textType, List<String> keywords) throws IOException;
+	void addParagraph(IndexType indexType, String documentId, String paragraphId, String texts, String textType, List<String> atWords) throws IOException;
 	
 	/**
 	 * 更新段落索引
@@ -44,13 +44,13 @@ public interface SearchService {
 	 * @param paragraphId 段落id
 	 * @param texts 段落纯文本内容，这部分内容需要分词并添加索引。
 	 * @param textType 标记文本类型，纯文本为text，数组字段为arrayField。
-	 * @param keywords 检索关键字，这部分内容不应该分词，应该直接进行索引。
+	 * @param atWords 添加索引时，at后面的人名，便于分词。
 	 * @throws IOException 
 	 * @throws ExecutionException 
 	 * @throws InterruptedException 
 	 * @throws Exception 
 	 */
-	void editParagraph(IndexType indexType, String documentId, String paragraphId, String texts, String textType, List<String> keywords) throws IOException, InterruptedException, ExecutionException, Exception;
+	void editParagraph(IndexType indexType, String documentId, String paragraphId, String texts, String textType, List<String> atWords) throws IOException, InterruptedException, ExecutionException, Exception;
 	
 	/**
 	 * 删除段落索引

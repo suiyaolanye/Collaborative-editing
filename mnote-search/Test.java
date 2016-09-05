@@ -9,16 +9,16 @@ public class Test {
 	
 	
 	public static void main(String[] args) throws ExecutionException, Exception {
-		String documentId = "a";
-		String paragraphId = "1";
+		String documentId = "d";
+		String paragraphId = "3";
 		
-		String texts = "哈尔滨工业大学";
+		String texts = "哈尔滨工业大学我8月30日，在小桔科技招聘官网上申请了新锐计划，前天这样收到了牛客的模拟笔试邮件，但是现在还没有收到正式笔试邮件，我想问一下你们收到了正式笔试的邮件了么技招聘官网上申请了新锐计划，前天这样收到了牛客的模拟笔试邮件，但是现在还没有收到正式笔试邮件，我想问一下你们收到了正式笔试的邮件了么哈工大";
 		String textsModify = "哈尔滨工业大学（威海）";
 		
 		List<String> documentIdSearch = new ArrayList<String>();
-		documentIdSearch.add("a");
-		documentIdSearch.add("b");
-		documentIdSearch.add("c");
+//		documentIdSearch.add("a");
+//		documentIdSearch.add("b");
+//		documentIdSearch.add("c");
 		
 		SearchServiceApi searchIndex = new SearchServiceApi();
 		
