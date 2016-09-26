@@ -13,9 +13,9 @@
 	添加下载包中lib目录下的包到工程
 
 遇到问题：
-1.Exception in thread "main" java.lang.IllegalStateException: path.home is not configured
+X.Exception in thread "main" java.lang.IllegalStateException: path.home is not configured
 	类文件右键选择Run Configurations,Arguments标签页下，VM arguements下写：
 	-Des.path.home=F:\Program Files (x86)\elasticsearch-2.3.5（注：安装文件目录）
 
-2.乱码
-	set JAVA_OPTIONS=%JAVA_OPTIONS% -Dfile.encoding=uft-8
+
+
