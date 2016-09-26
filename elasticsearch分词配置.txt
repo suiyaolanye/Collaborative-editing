@@ -1,0 +1,27 @@
+﻿添加分词：
+1.下载： git clone git://github.com/medcl/elasticsearch-rtf.git -b master --depth 1
+
+2.elasticsearch-rtf\config\elasticsearch.yml文件
+	最后的：index.analysis.analyzer.default.type: keyword，keyword修改为ik
+
+3.SearchServiceApi.addIndex函数
+	添加：.field("indexAnalyzer","ik")
+		  .field("searchAnalyzer","ik") 
+
+
+出现问题：
+1.Guice Exception: java.security.AccessControlException: access denied ("java.io.FilePermission" "F:\Program%20Files%20(x86)\elasticsearch-rtf\plugins\elasticsearch-analysis-ik-1.8.1\config\ik\IKAnalyzer.cfg.xml" "read")
+
+修改jre\lib\security\java.policy文件，添加：
+grant {
+  permission java.security.AllPermission;
+};
+
+
+
+
+
+
+
+
+
